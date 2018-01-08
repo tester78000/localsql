@@ -12,12 +12,13 @@
         android:text="Nom :" />
 
     <EditText
-        android:id="@+id/nom"
+        android:id="@+id/editTextnom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        />
+        android:inputType="textPersonName">
+    <requestFocus />
+    </EditText>
 
     <TextView
         android:id="@+id/textView2"
@@ -26,12 +27,11 @@
         android:text="Prenom :" />
 
     <EditText
-        android:id="@+id/prenom"
+        android:id="@+id/editTextPrenom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-         />
+        android:inputType="textPersonName" />
 
     <TextView
         android:id="@+id/textView3"
@@ -40,17 +40,17 @@
         android:text="E-mail :" />
 
     <EditText
-        android:id="@+id/mail"
+        android:id="@+id/editTextMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        />
+        android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/buttonValider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Valider"
+        android:background="@color/rose"
         android:onClick="onValid"/>
 </LinearLayout>
