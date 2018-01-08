@@ -15,10 +15,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "contact_database";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String CONTACT_TABLE_SQL ="CREATE TABLE contacts("+"id INTEGER PRIMARY KEY AUTO_INCREMENT,"+
-    "first_name TEXT,"+
-    "name TEXT NOT NULL,"+
-    "email TEXT NOT NULL,)";
+    private static final String CONTACT_TABLE_SQL ="CREATE TABLE contacts("+
+            "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+            "first_name TEXT,"+
+            "name TEXT NOT NULL,"+
+            "email TEXT NOT NULL)";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
