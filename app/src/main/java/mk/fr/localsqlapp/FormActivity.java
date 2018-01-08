@@ -1,5 +1,6 @@
 package mk.fr.localsqlapp;
 
+import android.app.ActionBar;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteException;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +14,30 @@ import fr.mk.database.DatabaseHandler;
 
 public class FormActivity extends AppCompatActivity {
 
+    private EditText editTextNom;
+    private EditText editTextPrenom;
+    private EditText editTextEmail;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form);
+
+        editTextNom = (EditText) findViewById(R.id.editTextNom);
+        editTextPrenom = (EditText) findViewById(R.id.editTextPrenom);
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+
+        //Initialisation pour test
+        editTextNom.setText("Allen");
+        editTextPrenom.setText("Barry");
+        editTextEmail.setText("barry.allen@flash.com");
+
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     public void onValid(View v){
@@ -39,6 +60,11 @@ public class FormActivity extends AppCompatActivity {
        try {
            db.getWritableDatabase().insert("contacts", null, insertValues);
            Toast.makeText(this, "Insertion OK", Toast.LENGTH_SHORT).show();
+
+           editTextNom.setText("");
+           editTextPrenom.setText("");
+           editTextEmail.setText("");
+
        }catch (SQLiteException ex){
             Log.e("SQL EXCEPTION", ex.getMessage());
        }
