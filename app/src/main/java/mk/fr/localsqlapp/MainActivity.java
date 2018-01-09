@@ -59,8 +59,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
 
     public void onAddContact(View view) {
+
+
         Intent formIntent = new Intent(this, FormActivity.class);
-        startActivity(formIntent);
+         if (this.selectedIndex != null) {
+             this.selectedPersonn = this.contactList.get(selectedIndex);
+             formIntent.putExtra("id", selectedPersonn.get("id").toString()  );
+             formIntent.putExtra("name", selectedPersonn.get("name").toString()  );
+             formIntent.putExtra("firstName", selectedPersonn.get("firstName").toString()  );
+             formIntent.putExtra("email", selectedPersonn.get("email").toString()  );
+         }
+        startActivityForResult(formIntent,1);
 
     }
 
@@ -119,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 deleteSelectedContact();
                 break;
             case R.id.mainMenuOptionEdit:
+                onAddContact(item.getActionView());
                 break;
 
         }
@@ -145,18 +155,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //db.getWritableDatabase().delete("contacts", "id=?"  , params);
 
 
-                //Reference au widget ListView sur le layout
-                contactListView = findViewById(R.id.contactListView);
-
-
-                //Recuperation de la liste des contacts
-                contactList = this.getAllContacts();
-
-                //Création d'un contactArrayAdapter
-                ContactArrayAdapter contactAdapter = new ContactArrayAdapter(this, contactList);
-
-                //Definition de l'adapter de notre listView
-                contactListView.setAdapter(contactAdapter);
+               contactListInit();
 
             } catch (SQLiteException ex) {
                 Log.e("SQL EXCEPTION", ex.getMessage());
@@ -168,5 +167,35 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         {
             Toast.makeText(this, "Vous devez selectionner un contact", Toast.LENGTH_SHORT).show();
         }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==1 && resultCode == RESULT_OK){
+            Toast.makeText(this, "Mise a jour effectué", Toast.LENGTH_SHORT).show();
+
+            this.contactListInit();
+
+        }
+    }
+
+    private void contactListInit() {
+
+        //Reference au widget ListView sur le layout
+        contactListView = findViewById(R.id.contactListView);
+
+
+        //Recuperation de la liste des contacts
+        contactList = this.getAllContacts();
+
+        //Création d'un contactArrayAdapter
+        ContactArrayAdapter contactAdapter = new ContactArrayAdapter(this, contactList);
+
+        //Definition de l'adapter de notre listView
+        contactListView.setAdapter(contactAdapter);
+
+
+
     }
 }
