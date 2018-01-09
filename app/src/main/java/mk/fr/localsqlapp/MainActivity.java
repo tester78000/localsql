@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -97,18 +99,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         this.selectedIndex = position;
         this.selectedPersonn = this.contactList.get(selectedIndex);
 
-        Toast.makeText(this, position, Toast.LENGTH_SHORT).show();
+
 
 
         //Instanciation de la connexion à la base de données
         DatabaseHandler db = new DatabaseHandler(view.getContext());
 
 
-
         //Insertion des données
         try {
 
-            db.getWritableDatabase().delete("contacts",id + "="+position , null);
+            db.getWritableDatabase().delete("contacts","first_name" + "="+selectedPersonn.get("firstName").toString() , null);
 
 
             //Reference au widget ListView sur le layout
@@ -127,11 +128,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         } catch (SQLiteException ex) {
             Log.e("SQL EXCEPTION", ex.getMessage());
         }
-        Toast.makeText(this, "Contact supprimé", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Contact supprimé "+selectedPersonn.get("firstName") , Toast.LENGTH_SHORT).show();
 
 
     }
 
-    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_option_menu,menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.mainMenuOptionDelete:
+                break;
+            case R.id.mainMenuOptionEdit:
+                break;
+
+        }
+        return true;
+    }
 }
