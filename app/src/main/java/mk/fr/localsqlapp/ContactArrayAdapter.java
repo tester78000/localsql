@@ -51,6 +51,7 @@ public class ContactArrayAdapter extends ArrayAdapter {
         emailTextView.setText(contactData.get("email"));
 
 
+
         return view;
     }
 }
