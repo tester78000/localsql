@@ -1,18 +1,24 @@
 package mk.fr.localsqlapp;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Map;
 
+import fr.mk.database.DatabaseHandler;
 
 
 public class ContactArrayAdapter extends ArrayAdapter {
@@ -41,18 +47,23 @@ public class ContactArrayAdapter extends ArrayAdapter {
         Map<String, String> contactData = this.data.get(position);
 
         //Liaison entre les données et la vue
-        TextView nameTextView = view.findViewById(R.id.listTextViewName);
+        final TextView nameTextView = view.findViewById(R.id.listTextViewName);
         nameTextView.setText(contactData.get("name").toUpperCase());
 
-        TextView FirstNameTextView = view.findViewById(R.id.listTextViewFirstname);
+        final TextView FirstNameTextView = view.findViewById(R.id.listTextViewFirstname);
         FirstNameTextView.setText(contactData.get("firstName"));
 
-        TextView emailTextView = view.findViewById(R.id.listTextViewEmail);
+        final TextView emailTextView = view.findViewById(R.id.listTextViewEmail);
         emailTextView.setText(contactData.get("email"));
+
+
+
 
 
 
 
         return view;
     }
+
+
 }
