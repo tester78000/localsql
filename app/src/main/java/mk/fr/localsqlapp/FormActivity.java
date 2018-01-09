@@ -52,6 +52,7 @@ public class FormActivity extends AppCompatActivity {
 
         //définition des données à inserer
         ContentValues insertValues = new ContentValues();
+
         insertValues.put("name", name);
         insertValues.put("first_name", firstName);
         insertValues.put("email", email);
@@ -59,6 +60,7 @@ public class FormActivity extends AppCompatActivity {
         //Insertion des données
        try {
            db.getWritableDatabase().insert("contacts", null, insertValues);
+
            Toast.makeText(this, "Insertion OK", Toast.LENGTH_SHORT).show();
 
            editTextNom.setText("");
