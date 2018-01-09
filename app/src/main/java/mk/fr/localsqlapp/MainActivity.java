@@ -41,10 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Instanciation de la liste qui recevra les données
         List<Map<String, String>> contactList=new ArrayList<>();
-        Map<String, String> contactCols = new HashMap<>();
+
 
         //Parcours du curseur
         while (cursor.moveToNext()){
+            Map<String, String> contactCols = new HashMap<>();
             contactCols.put("name", cursor.getString(0));
             contactCols.put("first_name", cursor.getString(1));
             contactCols.put("email", cursor.getString(2));
