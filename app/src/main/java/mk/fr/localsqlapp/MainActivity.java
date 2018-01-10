@@ -24,13 +24,64 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private ListView contactListView;
     private List<Map<String, String>> contactList;
-    private Integer selectedIndex;
+    private Integer selectedIndex  ;
     private Map<String, String> selectedPersonn;
-    private Bundle savedInstanceState;
+    private final String LIVE_CYCLE = "cycle_de_vie";
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(LIVE_CYCLE, "onStart");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(LIVE_CYCLE, "onPause");
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(LIVE_CYCLE, "onRestart");
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(LIVE_CYCLE, "onResume");
+
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(LIVE_CYCLE, "onStop");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(LIVE_CYCLE, "onDestroy");
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("selectedIndex", this.selectedIndex);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        Log.i(LIVE_CYCLE, "onCreate");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -39,8 +90,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         contactListView = findViewById(R.id.contactListView);
 
 
+
         //Recuperation de la liste des contacts
         contactList = this.getAllContacts();
+
+        //recuperation des données persistées dans le bundle
+        if (savedInstanceState != null) {
+            this.selectedIndex = savedInstanceState.getInt("selectedIndex");
+            if (this.selectedIndex != null) {
+                this.selectedPersonn = this.contactList.get(this.selectedIndex);
+                contactListView.setSelection(this.selectedIndex);
+            }
+        }
+
 
         //Création d'un contactArrayAdapter
         ContactArrayAdapter contactAdapter = new ContactArrayAdapter(this, contactList);
@@ -62,14 +124,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         Intent formIntent = new Intent(this, FormActivity.class);
-         if (this.selectedIndex != null) {
-             this.selectedPersonn = this.contactList.get(selectedIndex);
-             formIntent.putExtra("id", selectedPersonn.get("id").toString()  );
-             formIntent.putExtra("name", selectedPersonn.get("name").toString()  );
-             formIntent.putExtra("firstName", selectedPersonn.get("firstName").toString()  );
-             formIntent.putExtra("email", selectedPersonn.get("email").toString()  );
-         }
-        startActivityForResult(formIntent,1);
+        if (this.selectedIndex != null) {
+            this.selectedPersonn = this.contactList.get(selectedIndex);
+            formIntent.putExtra("id", selectedPersonn.get("id").toString());
+            formIntent.putExtra("name", selectedPersonn.get("name").toString());
+            formIntent.putExtra("firstName", selectedPersonn.get("firstName").toString());
+            formIntent.putExtra("email", selectedPersonn.get("email").toString());
+        }
+        startActivityForResult(formIntent, 1);
 
     }
 
@@ -140,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (this.selectedIndex != null) {
 
 
-
             //Instanciation de la connexion à la base de données
             DatabaseHandler db = new DatabaseHandler(getBaseContext());
 
@@ -155,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //db.getWritableDatabase().delete("contacts", "id=?"  , params);
 
 
-               contactListInit();
+                contactListInit();
 
             } catch (SQLiteException ex) {
                 Log.e("SQL EXCEPTION", ex.getMessage());
@@ -172,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==1 && resultCode == RESULT_OK){
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             Toast.makeText(this, "Mise a jour effectué", Toast.LENGTH_SHORT).show();
 
             this.contactListInit();
@@ -194,7 +255,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Definition de l'adapter de notre listView
         contactListView.setAdapter(contactAdapter);
-
 
 
     }
