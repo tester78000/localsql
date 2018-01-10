@@ -29,13 +29,13 @@ public class FormActivity extends AppCompatActivity {
         editTextPrenom = (EditText) findViewById(R.id.editTextPrenom);
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
 
-        idSelected = getIntent().getStringExtra("id");
+        this.idSelected = getIntent().getStringExtra("id");
 
         if (idSelected != null) {
             //Initialisation pour test
-            editTextNom.setText(getIntent().getStringExtra("name"));
-            editTextPrenom.setText(getIntent().getStringExtra("firstName"));
-            editTextEmail.setText(getIntent().getStringExtra("email"));
+            this.editTextNom.setText(getIntent().getStringExtra("name"));
+            this.editTextPrenom.setText(getIntent().getStringExtra("firstName"));
+            this.editTextEmail.setText(getIntent().getStringExtra("email"));
         }
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {

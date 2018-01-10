@@ -19,17 +19,18 @@ import java.util.List;
 import java.util.Map;
 
 import fr.mk.database.DatabaseHandler;
+import mk.fr.localsqlapp.model.Contact;
 
 
 public class ContactArrayAdapter extends ArrayAdapter {
 
     private Activity context;
-    private List<Map<String, String>> data;
+    private List<Contact> data;
     private int ressource;
     private LayoutInflater inflater;
 
 
-    public ContactArrayAdapter(@NonNull Context context,  @NonNull List<Map<String, String>> data) {
+    public ContactArrayAdapter(@NonNull Context context,  @NonNull List<Contact> data) {
         super(context, 0, data);
 
         this.data = data;
@@ -44,26 +45,19 @@ public class ContactArrayAdapter extends ArrayAdapter {
         View view = this.inflater.inflate(R.layout.list_view_contact, parent, false);
 
         //Recuperation des données d'une ligne
-        Map<String, String> contactData = this.data.get(position);
+        Contact contactData = this.data.get(position);
 
         //Liaison entre les données et la vue
-        final TextView nameTextView = view.findViewById(R.id.listTextViewName);
-        nameTextView.setText(contactData.get("name").toUpperCase());
+        TextView nameTextView = view.findViewById(R.id.listTextViewName);
+        nameTextView.setText(contactData.getName().toUpperCase());
 
-        final TextView FirstNameTextView = view.findViewById(R.id.listTextViewFirstname);
-        FirstNameTextView.setText(contactData.get("firstName"));
+        TextView FirstNameTextView = view.findViewById(R.id.listTextViewFirstname);
+        FirstNameTextView.setText(contactData.getFirst_name());
 
-        final TextView emailTextView = view.findViewById(R.id.listTextViewEmail);
-        emailTextView.setText(contactData.get("email"));
-
-
-
-
-
+        TextView emailTextView = view.findViewById(R.id.listTextViewEmail);
+        emailTextView.setText(contactData.getEmail());
 
 
         return view;
     }
-
-
 }
