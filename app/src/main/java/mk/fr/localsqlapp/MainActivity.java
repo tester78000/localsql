@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ContactDAO dao;
     private DatabaseHandler db;
 
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -44,68 +42,50 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onPause() {
         super.onPause();
         Log.i(LIVE_CYCLE, "onPause");
-
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.i(LIVE_CYCLE, "onRestart");
-
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(LIVE_CYCLE, "onResume");
-
     }
-
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.i(LIVE_CYCLE, "onStop");
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(LIVE_CYCLE, "onDestroy");
-
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(this.selectedIndex !=null){
-        outState.putInt("selectedIndex", this.selectedIndex);}
+        if (this.selectedIndex != null) {
+            outState.putInt("selectedIndex", this.selectedIndex);
+        }
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         Log.i(LIVE_CYCLE, "onCreate");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         this.db = new DatabaseHandler(this);
-
-        this.dao =new ContactDAO(this.db);
-
-
-
-
+        this.dao = new ContactDAO(this.db);
         //Reference au widget ListView sur le layout
         contactListView = findViewById(R.id.contactListView);
-
-
-       contactListInit();
-
+        contactListInit();
         //recuperation des données persistées dans le bundle
         if (savedInstanceState != null) {
             this.selectedIndex = savedInstanceState.getInt("selectedIndex");
@@ -114,16 +94,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 contactListView.setSelection(this.selectedIndex);
             }
         }
-
-
         //Création d'un contactArrayAdapter
         ContactArrayAdapter contactAdapter = new ContactArrayAdapter(this, contactList);
-
         //Definition de l'adapter de notre listView
         contactListView.setAdapter(contactAdapter);
-
         contactListView.setOnItemClickListener(this);
-
     }
 
     /**
@@ -133,38 +108,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
 
     public void onAddContact(View view) {
-
-
         Intent formIntent = new Intent(this, FormActivity.class);
-        if (this.selectedIndex != null) {
-            editContact(formIntent);
-        }
         startActivityForResult(formIntent, 1);
-
     }
 
-    private void editContact(Intent formIntent) {
-        this.selectedPersonn = this.contactList.get(selectedIndex);
-        formIntent.putExtra("id", String.valueOf(selectedPersonn.getId()));
-        formIntent.putExtra("name", selectedPersonn.getName());
-        formIntent.putExtra("firstName", selectedPersonn.getFirst_name());
-        formIntent.putExtra("email", selectedPersonn.getEmail());
+    private void editContact() {
+        if (this.selectedIndex != null) {
+            Intent formIntent = new Intent(this, FormActivity.class);
+            this.selectedPersonn = this.contactList.get(selectedIndex);
+            formIntent.putExtra("id", String.valueOf(selectedPersonn.getId()));
+            formIntent.putExtra("name", selectedPersonn.getName());
+            formIntent.putExtra("firstName", selectedPersonn.getFirst_name());
+            formIntent.putExtra("email", selectedPersonn.getEmail());
+            startActivityForResult(formIntent, 1);
+        } else Toast.makeText(this, "Veuillez selectionner un contact", Toast.LENGTH_SHORT).show();
     }
-
-
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long ivd) {
-
-
         this.selectedIndex = position;
         this.selectedPersonn = this.contactList.get(selectedIndex);
-
-
-        Toast.makeText(this, "Contact supprimé " + selectedPersonn.getFirst_name(), Toast.LENGTH_SHORT).show();
-
-
     }
 
     @Override
@@ -177,72 +140,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mainMenuOptionDelete:
-                deleteSelectedContact();
+                String msg = dao.deleteSelectedContact(selectedPersonn);
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                contactListInit();
                 break;
             case R.id.mainMenuOptionEdit:
-                onAddContact(item.getActionView());
+                editContact();
                 break;
-
         }
         return true;
-    }
-
-    public void deleteSelectedContact() {
-
-        if (this.selectedIndex != null) {
-
-
-            //Instanciation de la connexion à la base de données
-            DatabaseHandler db = new DatabaseHandler(getBaseContext());
-
-
-            //Insertion des données
-            try {
-                String sql = "DELETE From contacts WHERE id=?";
-                String[] params = {String.valueOf(this.selectedPersonn.getId())};
-
-                // db.getWritableDatabase().execSQL(sql,params);
-                db.getWritableDatabase().delete("contacts", "id" + "=" + selectedPersonn.getId(), null);
-                //db.getWritableDatabase().delete("contacts", "id=?"  , params);
-
-
-                contactListInit();
-
-            } catch (SQLiteException ex) {
-                Log.e("SQL EXCEPTION", ex.getMessage());
-                Toast.makeText(this, "Impossible de supprimer", Toast.LENGTH_SHORT).show();
-            }
-
-        } else
-
-        {
-            Toast.makeText(this, "Vous devez selectionner un contact", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Toast.makeText(this, "Mise a jour effectué", Toast.LENGTH_SHORT).show();
-
             this.contactListInit();
-
         }
     }
 
     private void contactListInit() {
-
-
         //Recuperation de la liste des contacts
         contactList = this.dao.findAll();
-
         //Création d'un contactArrayAdapter
         ContactArrayAdapter contactAdapter = new ContactArrayAdapter(this, contactList);
-
         //Definition de l'adapter de notre listView
         contactListView.setAdapter(contactAdapter);
-
-
     }
 }

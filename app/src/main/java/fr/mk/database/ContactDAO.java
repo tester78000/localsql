@@ -2,6 +2,8 @@ package fr.mk.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +67,34 @@ public class ContactDAO {
         return contact;
     }
 
-    public void testDAO(){
+    public String deleteSelectedContact(Contact selectedPersonn) {
 
+        String message;
+        //Instanciation de la connexion à la base de données
+        //DatabaseHandler db = new DatabaseHandler(getBaseContext());
+
+        if (selectedPersonn != null) {
+            //Insertion des données
+            try {
+                String sql = "DELETE From contacts WHERE id=?";
+                String[] params = {String.valueOf(selectedPersonn.getId())};
+
+                // db.getWritableDatabase().execSQL(sql,params);
+                db.getWritableDatabase().delete("contacts", "id" + "=" + selectedPersonn.getId(), null);
+                //db.getWritableDatabase().delete("contacts", "id=?"  , params);
+                message = "Contact supprimé";
+
+
+            } catch (SQLiteException ex) {
+                Log.e("SQL EXCEPTION", ex.getMessage());
+
+                message = "Impossible de supprimer";
+
+            }
+        } else {
+            message = "Vous devez selectionner un contact";
+        }
+        return message;
     }
 
 
